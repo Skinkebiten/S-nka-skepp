@@ -40,21 +40,37 @@ namespace Sänka_skepp
                                              {'2','0','0','0','0','1'},
                                              {'2','1','1','1','1','0'} };
 
-            int counter = 15;
-            int hitsLeft = 9; 
+            /*Generella kommentarer, samma eller andra kommentarer återfinns längre ner: 
+             * GOOD
+             * Snyggt grafiskt gränssnitt och ett fungerande spel.
+             * Tydligt vad man ska göra
+             * bra fehantering, vi kune inte få programmet att krasha
+             * kul med ljudeffekter och döskallarna 
+             * 
+             * TODO
+             * Koden kunde strukturerats upp i fler mindre metoder 
+             * Hanterar ej flera skott i samma ruta
+             * 
+             * Vissa variabelnamn såsom 'r', 'c' och counter kunde varit mer beskrivande, Exempelvis rows, colums, lifeCounter
+             * koden har stora mellanrum vilket gör den något svårföljd
+             */
 
-            DisplayGameBoard(gameBoard, counter, hitsLeft);
+
+            int counter = 15;//Namnet counter något intetsägande
+            int hitsLeft = 9;
+
+            DisplayGameBoard(gameBoard, counter, hitsLeft);//GOOD: Snyggt grafisk gränssnitt! gillar hur spelplanen visas upp
 
 
 
-            using (SpeechSynthesizer synth = new SpeechSynthesizer())
+            using (SpeechSynthesizer synth = new SpeechSynthesizer()) //TODO göra flera mindre metoder av detta
             {
                 synth.SetOutputToDefaultAudioDevice();
 
 
                 do
                 {
-                    int r = 0;
+                    int r = 0;//Variabelnamnen kunde varit tydligare
                     int c = 0;
                     try
                     {
@@ -65,45 +81,45 @@ namespace Sänka_skepp
                         c = int.Parse(arrayAnswer[1].ToString());
 
 
-                    counter--;
+                        counter--;
 
 
 
-                    if (facitGame[r, c] == '1') //facitGame[arrayAnswer[0],arrayAnswer[1]]
-                    {
+                        if (facitGame[r, c] == '1') //facitGame[arrayAnswer[0],arrayAnswer[1]]
+                        {
 
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine("BOOOOOOM!!! <--- Träff");
-                        Console.WriteLine();
-                        synth.Speak("BOOM!!! You hit the target");
-                        Console.ResetColor();                      
-                        gameBoard[r, c] = '☻';                        
-                        hitsLeft--;
-                        Console.Clear();
-                        DisplayGameBoard(gameBoard, counter, hitsLeft);
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine("BOOOOOOM!!! <--- Träff");
+                            Console.WriteLine();
+                            synth.Speak("BOOM!!! You hit the target");
+                            Console.ResetColor();
+                            gameBoard[r, c] = '☻';
+                            hitsLeft--;
+                            Console.Clear();
+                            DisplayGameBoard(gameBoard, counter, hitsLeft);
+                        }
+                        else if ((facitGame[r, c] == '2'))
+                        {
+                            Console.WriteLine("Out of bounds");
+
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine();
+                            Console.WriteLine("Hur kunde du missa, din klant...");
+                            synth.Speak("Miss");
+                            Console.WriteLine();
+                            Console.ResetColor();
+                            gameBoard[r, c] = 'x';
+                            Console.Clear();
+                            DisplayGameBoard(gameBoard, counter, hitsLeft);
+
+                        }
+
                     }
-                    else if ((facitGame[r, c] == '2'))
-                    {
-                        Console.WriteLine("Out of bounds");
-
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine();
-                        Console.WriteLine("Hur kunde du missa, din klant...");
-                        synth.Speak("Miss");
-                        Console.WriteLine();
-                        Console.ResetColor();
-                        gameBoard[r, c] = 'x';
-                        Console.Clear();
-                        DisplayGameBoard(gameBoard, counter, hitsLeft);
-
-                    }
-
-                    }
-                    catch (Exception)
-                    {
+                    catch (Exception)//GOOD: Mycket bra felhantering, går ej att få spelet att krasha. Kan dock förhindra användaren att skriva in fel sträng istället för catch exception
+                    {                //Catch Exception säger inte alltid så mycket om vad som gått fel
                         Console.WriteLine();
                         Console.WriteLine("Nu kastade du inte bomben i havet. Försök igen.");
                         synth.Speak("Invalid throw");
@@ -120,7 +136,7 @@ namespace Sänka_skepp
                     synth.Speak("Hurray!");
                     Console.WriteLine();
                 }
-                else 
+                else
                 {
                     Console.WriteLine();
                     Console.WriteLine("Game Over, dina bomber är slut!");
@@ -136,7 +152,7 @@ namespace Sänka_skepp
         {
 
 
-            for (int row = 0; row < gameBoard.GetLength(0); row++) 
+            for (int row = 0; row < gameBoard.GetLength(0); row++)
             {
                 Console.WriteLine("┌───────────────────────────────────────────────┐  ");
                 Console.WriteLine("|       |       |       |       |       |       | ");
